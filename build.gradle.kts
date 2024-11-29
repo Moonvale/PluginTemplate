@@ -7,7 +7,7 @@ version = "1.0.1-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    maven("\"https://repo.papermc.io/repository/maven-public/\"")
+    maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://jitpack.io")
     maven("https://repo.flyte.gg/releases")
 }
