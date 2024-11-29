@@ -1,7 +1,14 @@
 package eu.moonvale.template
 
-class TemplatePlugin {
+import org.bukkit.plugin.java.JavaPlugin
 
+class TemplatePlugin : JavaPlugin() {
 
+    override fun onEnable() {
 
+    }
+
+    override fun onDisable() {
+
+    }
 }
