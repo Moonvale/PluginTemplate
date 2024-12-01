@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.0.10"
+    id("com.saveourtool.diktat") version "2.0.0"
 }
 
 group = "eu.moonvale"
@@ -24,4 +25,9 @@ kotlin {
     jvmToolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
     }
+}
+
+diktat {
+    inputs { include("src/**/*.kt") }
+    debug = true  // turn on debug logging
 }
