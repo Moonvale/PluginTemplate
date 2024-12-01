@@ -22,10 +22,20 @@ jobs:
           java-version: '21'
           distribution: 'adopt'
 
-      - name: Verify Gradle Wrapper
+      - name: Cache Gradle Wrapper
+        id: cache-gradle-wrapper
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/wrapper/
+            ./gradle/wrapper/gradle-wrapper.jar
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
+
+      - name: Download Gradle Wrapper JAR
+        if: steps.cache-gradle-wrapper.outputs.cache-hit != 'true'
         run: |
-          ls -la gradle/wrapper
-          cat gradle/wrapper/gradle-wrapper.properties
+          mkdir -p ./gradle/wrapper
+          curl -L https://raw.githubusercontent.com/gradle/gradle/master/gradle/wrapper/gradle-wrapper.jar -o ./gradle/wrapper/gradle-wrapper.jar
 
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x ./gradlew
