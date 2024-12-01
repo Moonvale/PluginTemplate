@@ -1,6 +1,0 @@
-name: PluginTemplate
-version: 1.0.1
-api-version: '1.21'
-main: eu.moonvale.template.TemplatePlugin
-author: Moonvale Development
-website: https://moonvale.eu

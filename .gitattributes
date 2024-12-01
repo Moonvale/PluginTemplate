@@ -1,7 +1,0 @@
-/gradlew text eol=lf
-*.bat text eol=crlf
-*.jar binary
-
-*.md linguist-detectable=true
-*.md linguist-language=Markdown
-*.md linguist-documentation=false
