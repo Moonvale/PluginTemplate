@@ -1,0 +1,14 @@
+diktat:
+  version: "2.0.0"
+  inputs:
+    - "src/**/*.kt"
+  rules:
+    package-naming:
+      domain: "eu.moonvale"
+    kdoc-comments:
+      requireKdoc: true
+    blank-lines:
+      maxBlankLines: 1
+    indentation:
+      useTabs: false
+      indentSize: 4
