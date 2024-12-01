@@ -40,6 +40,12 @@ jobs:
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x ./gradlew
 
+      - name: Ensure diktat-analysis.yml exists
+        run: |
+          if [ ! -f diktat-analysis.yml ]; then
+            curl -L https://raw.githubusercontent.com/saveourtool/diktat/master/diktat-analysis.yml -o diktat-analysis.yml
+          fi
+
       - name: Build with Gradle
         run: ./gradlew build
 
