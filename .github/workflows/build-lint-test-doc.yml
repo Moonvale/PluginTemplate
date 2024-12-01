@@ -1,4 +1,4 @@
-name: Build and Lint
+name: Build and Lint and Test and Doc
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
         if: steps.cache-gradle-wrapper.outputs.cache-hit != 'true'
         run: |
           mkdir -p ./gradle/wrapper
-          curl -L https://services.gradle.org/distributions/gradle-8.8-bin.zip -o ./gradle/wrapper/gradle-wrapper.jar
+          curl -L https://raw.githubusercontent.com/gradle/gradle/master/gradle/wrapper/gradle-wrapper.jar -o ./gradle/wrapper/gradle-wrapper.jar
 
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x ./gradlew
