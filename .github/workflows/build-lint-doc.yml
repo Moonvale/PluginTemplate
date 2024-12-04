@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build-and-publish:
+  build-lint-publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -71,7 +71,7 @@ jobs:
           path: ./build/dokka
 
   deploy:
-    needs: build-and-publish
+    needs: build-lint-publish
     runs-on: ubuntu-latest
     environment:
       name: github-pages
