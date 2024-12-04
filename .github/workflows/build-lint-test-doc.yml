@@ -53,11 +53,11 @@ jobs:
 
       # Conditional steps start here
       - name: Generate Dokka Documentation
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master' && success()
         run: ./gradlew dokkaHtml
 
       - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master' && success()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
