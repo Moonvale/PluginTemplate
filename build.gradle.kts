@@ -1,6 +1,9 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+
 plugins {
     kotlin("jvm") version "2.0.10"
     id("com.saveourtool.diktat") version "2.0.0"
+    id("org.jetbrains.dokka") version "1.9.20"
 }
 
 group = "eu.moonvale"
@@ -30,4 +33,8 @@ kotlin {
 diktat {
     inputs { include("src/**/*.kt") }
     debug = true  // turn on debug logging
+}
+
+tasks.withType<DokkaTask>().configureEach {
+    outputDirectory.set(buildDir.resolve("dokka"))
 }

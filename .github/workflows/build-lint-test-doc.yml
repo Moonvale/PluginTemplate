@@ -1,4 +1,4 @@
-name: Build and Lint and Test and Doc
+name: Build, Lint, Test, and Publish Docs
 
 on:
   push:
@@ -35,7 +35,9 @@ jobs:
         if: steps.cache-gradle-wrapper.outputs.cache-hit != 'true'
         run: |
           mkdir -p ./gradle/wrapper
-          curl -L https://raw.githubusercontent.com/gradle/gradle/master/gradle/wrapper/gradle-wrapper.jar -o ./gradle/wrapper/gradle-wrapper.jar
+          curl -L https://services.gradle.org/distributions/gradle-7.6-bin.zip -o gradle.zip
+          unzip gradle.zip gradle/wrapper/gradle-wrapper.jar -d .
+          rm gradle.zip
 
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x ./gradlew
@@ -48,3 +50,32 @@ jobs:
 
       - name: Run Diktat Lint
         run: ./gradlew diktatCheck
+
+  publish-docs:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && success()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x ./gradlew
+
+      - name: Generate Dokka Documentation
+        run: ./gradlew dokkaHtml
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/dokka
