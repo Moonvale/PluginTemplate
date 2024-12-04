@@ -7,6 +7,16 @@ on:
   pull_request:
     branches:
       - '**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   build-and-publish:
@@ -51,16 +61,39 @@ jobs:
       - name: Run Diktat Lint
         run: ./gradlew diktatCheck
 
-      # Conditional steps start here
       - name: Generate Dokka Documentation
-        if: github.ref == 'refs/heads/master' && success()
         run: ./gradlew dokkaHtml
 
-      - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/master' && success()
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload Dokka Documentation
+        uses: actions/upload-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/dokka
-          publish_branch: gh-pages
-          force_orphan: true
+          name: dokka-docs
+          path: ./build/dokka
+
+  deploy:
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Dokka Documentation
+        uses: actions/download-artifact@v3
+        with:
+          name: dokka-docs
+          path: ./build/dokka
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './build/dokka'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
