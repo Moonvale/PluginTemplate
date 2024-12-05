@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build-lint-publish:
+  build-and-lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,23 +31,6 @@ jobs:
         with:
           java-version: '21'
           distribution: 'adopt'
-
-      - name: Cache Gradle Wrapper
-        id: cache-gradle-wrapper
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/wrapper/
-            ./gradle/wrapper/gradle-wrapper.jar
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
-
-      - name: Download Gradle Wrapper JAR
-        if: steps.cache-gradle-wrapper.outputs.cache-hit != 'true'
-        run: |
-          mkdir -p ./gradle/wrapper
-          curl -L https://services.gradle.org/distributions/gradle-8.8-bin.zip -o gradle.zip
-          unzip gradle.zip gradle/wrapper/gradle-wrapper.jar -d .
-          rm gradle.zip
 
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x ./gradlew
@@ -61,39 +44,31 @@ jobs:
       - name: Run Diktat Lint
         run: ./gradlew diktatCheck
 
-      - name: Generate Dokka Documentation
-        run: ./gradlew dokkaHtml
-
-      - name: Upload Dokka Documentation
-        uses: actions/upload-artifact@v3
-        with:
-          name: dokka-docs
-          path: ./build/dokka
-
-  deploy:
-    needs: build-lint-publish
+  dokka-docs-and-deploy:
+    needs: build-and-lint
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
 
-      - name: Download Dokka Documentation
-        uses: actions/download-artifact@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
         with:
-          name: dokka-docs
-          path: ./build/dokka
+          java-version: '21'
+          distribution: 'adopt'
+
+      - name: Generate Dokka Documentation
+        run: ./gradlew dokkaHtml
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './build/dokka'
-
-      - name: Deploy to GitHub Pages
+      - name: Deploy Dokka Documentation to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          path: ./build/dokka
