@@ -67,7 +67,7 @@ jobs:
       - name: Upload Dokka Documentation as Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: dokka-docs
+          name: github-pages
           path: ./build/dokka  # Path to the generated Dokka docs
 
       - name: Setup Pages
