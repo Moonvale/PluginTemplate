@@ -64,6 +64,12 @@ jobs:
       - name: Generate Dokka Documentation
         run: ./gradlew dokkaHtml
 
+      - name: Upload Dokka Documentation as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dokka-docs
+          path: ./build/dokka  # Path to the generated Dokka docs
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
@@ -71,4 +77,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          path: ./build/dokka
+          path: ./build/dokka  # Path to the Dokka docs folder
