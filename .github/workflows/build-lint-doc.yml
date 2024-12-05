@@ -60,6 +60,12 @@ jobs:
           java-version: '21'
           distribution: 'adopt'
 
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x ./gradlew
+
+      - name: Validate Gradle Wrapper
+        run: ./gradlew --version
+
       - name: Generate Dokka Documentation
         run: ./gradlew dokkaHtml
 
