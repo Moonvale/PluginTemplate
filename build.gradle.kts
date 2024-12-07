@@ -14,6 +14,7 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://jitpack.io")
     maven("https://repo.flyte.gg/releases")
+    maven("https://repo.codemc.io/repository/maven-public/")
 }
 
 dependencies {
@@ -21,7 +22,15 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:$paperVersion")
 
     val twilightVersion = findProperty("twilight") as String
-    implementation("gg.flyte:twilight:$twilightVersion")
+    compileOnly("gg.flyte:twilight:$twilightVersion")
+
+    val acfVersion = findProperty("acf") as String
+    compileOnly("co.aikar:acf-paper:$acfVersion")
+
+    val saduVersion = findProperty("sadu") as String
+    compileOnly("de.chojo.sadu:sadu-mariadb:$saduVersion")
+    compileOnly("de.chojo.sadu:sadu-queries:$saduVersion")
+    compileOnly("de.chojo.sadu:sadu-datasource:$saduVersion")
 }
 
 kotlin {
